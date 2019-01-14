@@ -165,6 +165,7 @@ class Layout extends React.Component {
           <Divider />
           <List>{secondaryListItems}</List>
         </Drawer>
+        {this.props.children}
 
       </div>
     );

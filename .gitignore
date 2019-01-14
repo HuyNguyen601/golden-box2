@@ -58,6 +58,9 @@ typings/
 .cache/
 public
 
+#firebase config
+src/firebase/config.js
+
 # Mac files
 .DS_Store
 

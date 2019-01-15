@@ -7,6 +7,9 @@ import Button from '@material-ui/core/Button'
 import Layout from '../components/layout'
 import CustomerTable from '../components/CustomerTable'
 
+//firebase
+import {firestore} from '../firebase'
+
 
 const styles = theme => ({
   appBarSpacer: theme.mixins.toolbar,
@@ -30,12 +33,31 @@ class Customer extends React.Component {
   constructor(props){
     super(props)
     this.state = {
+      row: {},
       name: '',
       phone:'',
       email:'',
+      key: 0,
       address:''
     }
     this.handleChange = this.handleChange.bind(this)
+    this.addCustomer = this.addCustomer.bind(this)
+  }
+  addCustomer = e=>{
+    const row = {
+      name: this.state.name,
+      phone: this.state.phone,
+      email: this.state.email
+    }
+    firestore.addCustomer(row)
+    this.setState({
+      name: '',
+      phone: '',
+      email: '',
+      row: row,
+      key: this.state.key === 0 ? 1 :0
+    })
+
   }
   handleChange= name=>e=>{
     this.setState({
@@ -47,7 +69,7 @@ class Customer extends React.Component {
     const {classes} = this.props
 
     return (
-      <Layout title='Customer'>
+      <Layout title='Customer' >
         <main className={classes.content}>
           <div className={classes.appBarSpacer}/>
           <Typography variant="h4" gutterBottom component="h2">
@@ -89,6 +111,7 @@ class Customer extends React.Component {
               className={classes.button}
               size='large'
               style={{marginTop:'20px'}}
+              onClick={this.addCustomer}
             >
               Add
             </Button>
@@ -98,7 +121,7 @@ class Customer extends React.Component {
           Customer Table
         </Typography>
         <Typography component="div" className={classes.tableContainer}>
-          <CustomerTable />
+          <CustomerTable key={this.state.key}/>
         </Typography>
 
 

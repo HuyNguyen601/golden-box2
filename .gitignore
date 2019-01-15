@@ -60,6 +60,7 @@ public
 
 #firebase config
 src/firebase/config.js
+src/firebase/firebase.json
 
 # Mac files
 .DS_Store

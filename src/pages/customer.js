@@ -4,31 +4,19 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 
+
+//algolia places
+//import Places from 'places.js'
+import {options} from '../config/config.js'
+
 import Layout from '../components/layout'
+import SEO from '../components/seo'
 import CustomerTable from '../components/CustomerTable'
 
 //firebase
 import {firestore} from '../firebase'
 
 
-const styles = theme => ({
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing.unit * 3,
-    height: '100vh',
-    overflow: 'auto',
-  },
-  container: {
-   display: 'flex',
-   flexWrap: 'wrap',
- },
- textField: {
-   marginLeft: theme.spacing.unit,
-   marginRight: theme.spacing.unit,
-   width: 300,
- },
-})
 class Customer extends React.Component {
   constructor(props){
     super(props)
@@ -42,6 +30,13 @@ class Customer extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this)
     this.addCustomer = this.addCustomer.bind(this)
+    this.clearCustomer = ()=>this.setState({
+      name: '',
+      phone: '',
+      email: '',
+      address: ''
+    })
+
   }
   addCustomer = e=>{
     const row = {
@@ -65,11 +60,21 @@ class Customer extends React.Component {
     })
   }
 
-  render() {
-    const {classes} = this.props
+  componentDidMount(){
+    options.container = document.querySelector('#outlined-address')
+    const isBrowser = typeof window !== 'undefined'
+    const Places = isBrowser ? require('places.js') : undefined
+    Places(options)
 
+
+  }
+
+  render() {
+  const {classes} = this.props
     return (
       <Layout title='Customer' >
+        <SEO title="Customer" keywords={[`gatsby`, `application`, `react`]} />
+
         <main className={classes.content}>
           <div className={classes.appBarSpacer}/>
           <Typography variant="h4" gutterBottom component="h2">
@@ -105,23 +110,44 @@ class Customer extends React.Component {
               margin="normal"
               variant='outlined'
             />
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              size='large'
-              style={{marginTop:'20px'}}
-              onClick={this.addCustomer}
-            >
-              Add
-            </Button>
         </form>
+        <TextField
+          id="outlined-address"
+          label="Address"
+          className={classes.textField}
+          value={this.state.address}
+          onChange={this.handleChange('address')}
+          margin="normal"
+          variant='outlined'
+          required
+          style={{width: '600px'}}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          size='large'
+          style={{marginTop:'20px', marginLeft: '20px'}}
+          onClick={this.addCustomer}
+        >
+          Add
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.button}
+          size='large'
+          style={{marginTop:'20px', marginLeft: '20px'}}
+          onClick={this.clearCustomer}
+        >
+          Clear
+        </Button>
 
         <Typography variant="h4" gutterBottom component="h2">
           Customer Table
         </Typography>
         <Typography component="div" className={classes.tableContainer}>
-          <CustomerTable key={this.state.key}/>
+          <CustomerTable/>
         </Typography>
 
 
@@ -130,4 +156,4 @@ class Customer extends React.Component {
   }
 }
 
-export default withStyles(styles)(Customer)
+export default Customer

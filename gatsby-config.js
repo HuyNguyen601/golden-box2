@@ -33,23 +33,6 @@ module.exports = {
         pathToConfigModule: `src/utils/typography`,
       },
     },
-    {
-      resolve: 'gatsby-source-firestore',
-      options: {
-        credential: require("./src/firebase/firebase.json"),
-        types: [
-          {
-            type: 'Customers',
-            collection: 'Customers',
-            map: doc => ({
-              name: doc.name,
-              phone: doc.phone,
-              email: doc.email,
-            }),
-          },
-        ],
-      }
-    },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.app/offline
     // 'gatsby-plugin-offline',

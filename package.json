@@ -21,13 +21,16 @@
     "gatsby-source-filesystem": "^2.0.8",
     "gatsby-source-firestore": "^1.0.3",
     "gatsby-transformer-sharp": "^2.1.8",
+    "places.js": "^1.15.1",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-helmet": "^5.2.0",
+    "react-jss": "^8.6.1",
     "react-typography": "^0.16.18",
     "typography": "^0.16.18",
-    "typography-theme-ocean-beach": "^0.16.18"
+    "typography-theme-ocean-beach": "^0.16.18",
+    "whatwg-fetch": "^2.0.4"
   },
   "keywords": [
     "gatsby"

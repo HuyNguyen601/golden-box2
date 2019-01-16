@@ -1,12 +1,18 @@
 import React from 'react'
-import {StaticQuery, graphql} from 'gatsby'
 
 import Paper from '@material-ui/core/Paper'
-import {SortingState, IntegratedSorting, PagingState, CustomPaging, SearchState} from '@devexpress/dx-react-grid'
-import {Grid, Table, TableHeaderRow, PagingPanel, Toolbar, SearchPanel} from '@devexpress/dx-react-grid-material-ui'
+import {SortingState, IntegratedSorting, PagingState, CustomPaging, SearchState, RowDetailState} from '@devexpress/dx-react-grid'
+import {Grid, Table, TableHeaderRow, PagingPanel, Toolbar, SearchPanel, TableRowDetail} from '@devexpress/dx-react-grid-material-ui'
 
 import {firestore} from '../firebase'
 import {Loading} from './loading.js'
+const RowDetail = ({ row }) => (
+  <div>
+    Address for
+    {' '}
+    {row.name}
+  </div>
+);
 
 class CustomerTable extends React.Component {
   constructor(props) {
@@ -33,7 +39,8 @@ class CustomerTable extends React.Component {
       pageSizes: [5, 10, 15, 20],
       currentPage: 0,
       searchValue: '',
-      loading: true,
+      expandedRowIds: [],
+      loading: false,
       sorting: [
         {
           columnName: 'name',
@@ -44,6 +51,7 @@ class CustomerTable extends React.Component {
     }
     this.changeSorting = sorting => this.setState({sorting})
     this.changePageSize = pageSize =>this.setState({pageSize})
+    this.changeExpandedDetails = expandedRowIds => this.setState({ expandedRowIds })
     this.changeCurrentPage = this.changeCurrentPage.bind(this)
     this.changeSearchValue = this.changeSearchValue.bind(this)
   }
@@ -66,21 +74,37 @@ class CustomerTable extends React.Component {
     if(sorting !== prevState.sorting
       || currentPage !== prevState.currentpage
       || searchValue !== prevState.searchValue
-      || pageSize !== prevState.pageSize)
-      firestore.getCustomers(sorting[0], currentPage, pageSize, searchValue, data=>this.setState(data))
+      || pageSize !== prevState.pageSize){
+        console.log(1)
+        firestore.getCustomers(sorting[0], currentPage, pageSize, searchValue, data=>this.setState(data))
+    }
   }
 
   componentDidMount() {
     const {sorting, currentPage, pageSize,searchValue} = this.state
-    firestore.getCustomers(sorting[0], currentPage, pageSize, searchValue, data=>this.setState(data))
+    //firestore.getCustomers(sorting[0], currentPage, pageSize, searchValue, data=>this.setState(data))
   }
 
   render() {
-    const {columns, rows, sorting, currentPage, totalCount, pageSize,pageSizes,loading} = this.state
+    const {
+      columns,
+      rows,
+      sorting,
+      currentPage,
+      totalCount,
+      pageSize,
+      pageSizes,
+      expandedRowIds,
+      loading
+    } = this.state
     return (<Paper style={{
         position: 'relative'
       }}>
       <Grid rows={rows} columns={columns}>
+        <RowDetailState
+            expandedRowIds={expandedRowIds}
+            onExpandedRowIdsChange={this.changeExpandedDetails}
+        />
         <PagingState currentPage={currentPage}
           onCurrentPageChange={this.changeCurrentPage}
           pageSize={pageSize}
@@ -95,6 +119,9 @@ class CustomerTable extends React.Component {
         <TableHeaderRow showSortingControls/>
         <Toolbar />
         <SearchPanel />
+        <TableRowDetail
+            contentComponent={RowDetail}
+        />
         <PagingPanel pageSizes = {pageSizes} />
       </Grid>
       {loading && <Loading />}

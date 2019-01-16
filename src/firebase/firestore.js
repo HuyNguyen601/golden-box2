@@ -19,15 +19,19 @@ export const getCustomers = (sorting, currentPage,pageSize, search,callback)=>{
   const startAt = currentPage * pageSize
   const res = {}
   //get total count
-  firestore.collection('Customers').orderBy(sorting.columnName, sorting.direction).get().then(querySnapshot=>{
+  const firstQuery = firestore.collection('Customers')
+                    .where(sorting.columnName,'>=',search)
+                    .where(sorting.columnName,'<=',search+'z')
+                    .orderBy(sorting.columnName, sorting.direction)
+
+  firstQuery.get().then(querySnapshot=>{
     res.totalCount=querySnapshot.size
     const doc = querySnapshot.docs[startAt]
     //main query
     console.log(sorting)
-    const query = firestore.collection('Customers')
-      .orderBy(sorting.columnName, sorting.direction)
-      .limit(pageSize)
-      .startAt(doc)
+    const query = doc === undefined
+      ? firstQuery.limit(pageSize)
+      : firstQuery.limit(pageSize).startAt(doc)
 
     query.get()
     .then(querySnapshot=>{

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import '../styles/loading.css';
+import loadingStyles from '../styles/loading.module.css';
 
 export const Loading = () => (
-  <div className="loading-shading-mui">
-    <CircularProgress className="loading-icon-mui" />
+  <div className={loadingStyles.shading}>
+    <CircularProgress className={loadingStyles.icon} />
   </div>
 );

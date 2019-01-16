@@ -111,7 +111,6 @@ class Layout extends React.Component {
 
   render() {
     const { classes, title} = this.props;
-
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -165,7 +164,7 @@ class Layout extends React.Component {
           <Divider />
           <List>{secondaryListItems}</List>
         </Drawer>
-        {this.props.children}
+        {withStyles(styles)(this.props.children)}
 
       </div>
     );

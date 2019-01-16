@@ -16,6 +16,20 @@ import CustomerTable from '../components/CustomerTable'
 //firebase
 import {firestore} from '../firebase'
 
+const styles = theme =>({
+  appBarSpacer: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing.unit * 3,
+    height: '100vh',
+    overflow: 'auto',
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 300
+  },
+})
 
 class Customer extends React.Component {
   constructor(props){
@@ -156,4 +170,4 @@ class Customer extends React.Component {
   }
 }
 
-export default Customer
+export default withStyles(styles)(Customer)

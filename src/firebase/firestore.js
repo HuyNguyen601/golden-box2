@@ -16,6 +16,7 @@ export const addCustomer = (customer)=>{
 }
 
 export const getCustomers = (sorting, currentPage,pageSize, search,callback)=>{
+  console.log(1)
   const startAt = currentPage * pageSize
   const res = {}
   //get total count
@@ -28,7 +29,6 @@ export const getCustomers = (sorting, currentPage,pageSize, search,callback)=>{
     res.totalCount=querySnapshot.size
     const doc = querySnapshot.docs[startAt]
     //main query
-    console.log(sorting)
     const query = doc === undefined
       ? firstQuery.limit(pageSize)
       : firstQuery.limit(pageSize).startAt(doc)

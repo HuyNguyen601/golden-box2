@@ -70,19 +70,19 @@ class CustomerTable extends React.Component {
 
   componentDidUpdate(prevProps,prevState) {
     const {sorting, currentPage, pageSize, searchValue} = this.state
-    const current = {sorting, currentPage,pageSize,searchValue}
     if(sorting !== prevState.sorting
-      || currentPage !== prevState.currentpage
+      || currentPage !== prevState.currentPage
       || searchValue !== prevState.searchValue
       || pageSize !== prevState.pageSize){
-        console.log(1)
+        console.log('Updated')
         firestore.getCustomers(sorting[0], currentPage, pageSize, searchValue, data=>this.setState(data))
     }
   }
 
   componentDidMount() {
     const {sorting, currentPage, pageSize,searchValue} = this.state
-    //firestore.getCustomers(sorting[0], currentPage, pageSize, searchValue, data=>this.setState(data))
+    console.log('Mounted')
+    firestore.getCustomers(sorting[0], currentPage, pageSize, searchValue, data=>this.setState(data))
   }
 
   render() {

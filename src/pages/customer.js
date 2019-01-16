@@ -39,7 +39,6 @@ class Customer extends React.Component {
       name: '',
       phone:'',
       email:'',
-      key: 0,
       address:''
     }
     this.handleChange = this.handleChange.bind(this)
@@ -63,8 +62,7 @@ class Customer extends React.Component {
       name: '',
       phone: '',
       email: '',
-      row: row,
-      key: this.state.key === 0 ? 1 :0
+      row: row
     })
 
   }
@@ -163,8 +161,6 @@ class Customer extends React.Component {
         <Typography component="div" className={classes.tableContainer}>
           <CustomerTable/>
         </Typography>
-
-
     </main>
   </Layout>)
   }

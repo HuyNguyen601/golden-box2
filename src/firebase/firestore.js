@@ -9,6 +9,7 @@ export const addCustomer = (customer)=>{
   })
   .then(function(docRef) {
     console.log("Document written with ID: ", docRef.id);
+    docRef.collection("Address").add(customer.address)
   })
   .catch(function(error) {
     console.error("Error adding document: ", error);
@@ -51,63 +52,14 @@ export const getCustomers = (sorting, currentPage,pageSize, search,callback)=>{
     })
   })
 }
-
-/*
-export const getNextCustomers(last,sorting, pageSize, callback)=>{
-  const res = {}
-  //get total count
-  firestore.collection('Customers').get().then(querySnapshot=>{ res.totalCount=querySnapshot.size})
-  //main query
-  const query = firestore.collection('Customers')
-    .orderBy('name')
-    .limit(pageSize)
-    .startAfter(last)
-  query.get()
-  .then(querySnapshot=>{
-    const rows = []
-    const first = querySnapshot.docs[0]
-    const last = querySnapshot.docs[querySnapshot.docs.length-1]
-    querySnapshot.forEach(doc=>{
-      const row = doc.data()
-      row.id = doc.id
-      rows.push(row)
-    })
-    res.rows = rows
-    res.last = last
-    res.first = first
-    callback(res)
+export const getAddress= async id =>{
+  const query = firestore.collection('Customers').doc(id).collection('Address')
+  const querySnapshot = await query.get()
+  const rows = []
+  querySnapshot.forEach(doc=>{
+    const row = doc.data()
+    row.id = doc.id
+    rows.push(row)
   })
-  .catch(error=>{
-    console.log(error)
-  })
+  return rows
 }
-
-export const getPrevCustomers(first,sorting, pageSize, callback)=>{
-  const res = {}
-  //get total count
-  firestore.collection('Customers').get().then(querySnapshot=>{ res.totalCount=querySnapshot.size})
-  //main query
-  const query = firestore.collection('Customers')
-    .orderBy('name')
-    .limit(pageSize)
-    .startBefore(first)
-  query.get()
-  .then(querySnapshot=>{
-    const rows = []
-    const first = querySnapshot.docs[0]
-    const last = querySnapshot.docs[querySnapshot.docs.length-1]
-    querySnapshot.forEach(doc=>{
-      const row = doc.data()
-      row.id = doc.id
-      rows.push(row)
-    })
-    res.rows = rows
-    res.last = last
-    res.first = first
-    callback(res)
-  })
-  .catch(error=>{
-    console.log(error)
-  })
-}
-*/

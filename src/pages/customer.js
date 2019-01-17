@@ -12,24 +12,9 @@ import {options} from '../config/config.js'
 import Layout from '../components/layout'
 import SEO from '../components/seo'
 import CustomerTable from '../components/CustomerTable'
-
+import {styles} from '../utils/styles'
 //firebase
 import {firestore} from '../firebase'
-
-const styles = theme =>({
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing.unit * 3,
-    height: '100vh',
-    overflow: 'auto',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 300
-  },
-})
 
 class Customer extends React.Component {
   constructor(props){
@@ -41,6 +26,15 @@ class Customer extends React.Component {
       email:'',
       address:''
     }
+    this.valid = {
+      all: false,
+      name: false,
+      phone: false,
+      address: false,
+      email: true
+    }
+    //this address to add to firestore
+    this.address = {}
     this.handleChange = this.handleChange.bind(this)
     this.addCustomer = this.addCustomer.bind(this)
     this.clearCustomer = ()=>this.setState({
@@ -52,31 +46,67 @@ class Customer extends React.Component {
 
   }
   addCustomer = e=>{
+
     const row = {
       name: this.state.name,
       phone: this.state.phone,
-      email: this.state.email
+      email: this.state.email,
+      address: this.address
     }
     firestore.addCustomer(row)
     this.setState({
       name: '',
       phone: '',
       email: '',
+      address: '',
       row: row
     })
 
   }
-  handleChange= name=>e=>{
-    this.setState({
-      [name]: e.target.value
-    })
+  //type: enum of "name", "phone", "email", "address"
+  handleChange= type=>e=>{
+    //check validity for each input
+    this.valid[type] = type !== 'address' ? e.target.checkValidity() : false
+    this.valid.all = true
+    for(let property in this.valid){
+      if(this.valid[property] === false){
+        this.valid.all = false
+      }
+    }
+    //allow only number in phone input
+    if(type!=="phone" || !isNaN(e.target.value))
+    {
+      this.setState({
+        [type]: e.target.value
+      })
+    }
   }
 
   componentDidMount(){
+    //place.js only work in the browser, so we have to require it here
     options.container = document.querySelector('#outlined-address')
     const isBrowser = typeof window !== 'undefined'
     const Places = isBrowser ? require('places.js') : undefined
-    Places(options)
+    const autoComplete = Places(options)
+    //put event on change to get data for address
+    autoComplete.on('change',e=>{
+      //check validity again
+      this.valid.address = true
+      this.valid.all = true
+      for(let property in this.valid){
+        if(this.valid[property] === false){
+          this.valid.all = false
+        }
+      }
+
+      this.address = {
+        value: e.suggestion.value,
+        street: e.suggestion.name,
+        city: e.suggestion.city,
+        county: e.suggestion.county,
+        zip: e.suggestion.postcode
+      }
+    })
 
 
   }
@@ -116,6 +146,7 @@ class Customer extends React.Component {
             <TextField
               id="outlined-email"
               label="Email"
+              type='email'
               className={classes.textField}
               value={this.state.email}
               onChange={this.handleChange('email')}

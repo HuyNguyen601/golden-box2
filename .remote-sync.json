@@ -1,0 +1,18 @@
+{
+  "logger": {
+    "title": "Remote Sync"
+  },
+  "transport": "ftp",
+  "uploadOnSave": false,
+  "useAtomicWrites": false,
+  "deleteLocal": true,
+  "hostname": "192.168.0.96",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "huy",
+  "password": "h123",
+  "watch": [],
+  "target": "/srv/www/htdocs/try/Huy"
+}

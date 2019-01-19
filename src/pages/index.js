@@ -10,7 +10,7 @@ import Dashboard from '../components/dashboard'
 const IndexPage = () => (
 <Layout title='Dashboard'>
   <SEO title="Home" keywords={[`gatsby`, `application`, `react`]} />
-  <Dashboard/>
+  
 </Layout>
 )
 
